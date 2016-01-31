@@ -15,21 +15,33 @@ import java.io.OutputStream;
 /**
  * Created by aibol on 1/31/16.
  */
-public class DownloadFileTask extends AsyncTask<Void, Void, Void> {
+
+public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
+
+    boolean download;
+
+    public DownloadFileTask(boolean download) {
+        this.download = download;
+    }
 
     private final String LOG_TAG = DownloadFileTask.class.getSimpleName();
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected Boolean doInBackground(String... params) {
+        String filename = params[0];
+        if (filename == null) {
+            Log.e(LOG_TAG, "No filename provided");
+            return false;
+        }
         try {
-            downloadFile("/Test/FILETIMES.XML");
+            return downloadFile("/Test/" + filename);
         } catch (IOException e) {
             Log.e(LOG_TAG, e.getMessage());
+            return false;
         }
-        return null;
     }
 
-    private void downloadFile(String filename) throws IOException {
+    private boolean downloadFile(String filename) throws IOException {
         FTPClient ftp = null;
 
         try {
@@ -51,6 +63,16 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Void> {
             BufferedReader reader = null;
 
             inputStream = ftp.retrieveFileStream(filename);
+
+            if(inputStream == null) {
+                Log.d(LOG_TAG, "File does not exist");
+                return false;
+            }
+
+            if(!download) {
+                return true;
+            }
+
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
@@ -58,14 +80,14 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Void> {
                 Log.d(LOG_TAG, "Buffer line: " + line);
                 buffer.append(line + "\n");
             }
-            if (buffer.length() == 0) {
-                Log.d(LOG_TAG, "Buffer with size = 0");
-            }
-            Log.d(LOG_TAG, "Here is our output");
+            Log.d(LOG_TAG, "Output");
             Log.d(LOG_TAG, buffer.toString());
+
+            return true;
 
         } catch (IOException e) {
             Log.e(LOG_TAG, e.getMessage());
+            return false;
         } finally {
             if (ftp != null) {
                 ftp.logout();
