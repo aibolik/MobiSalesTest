@@ -31,14 +31,15 @@ public class DataContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FILETIMES;
 
-
-
         public static final String TABLE_NAME = "filetimes";
         public static final String COLUMN_FILENAME = "filename";
         public static final String COLUMN_FILENAMEXML = "filnamexml";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
     public static final class Items implements BaseColumns {
 
@@ -60,6 +61,9 @@ public class DataContract {
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     public static final class UnitsEntry implements BaseColumns {
@@ -83,6 +87,10 @@ public class DataContract {
         public static final String COLUMN_CONV_FACT2 = "conv_fact2";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
+
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     public static final class BarcodesEntry implements BaseColumns {
@@ -103,6 +111,10 @@ public class DataContract {
         public static final String COLUMN_LINE_NR = "line_nr";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
+
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
     public static final class PricesEntry implements BaseColumns {
 
@@ -126,6 +138,10 @@ public class DataContract {
         public static final String COLUMN_UNIT_CONVERT = "unit_convert";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
+
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
     public static final class ItemfilesEntry implements BaseColumns {
 
@@ -146,5 +162,9 @@ public class DataContract {
         public static final String COLUMN_DEFAULT = "default";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
+
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 }
