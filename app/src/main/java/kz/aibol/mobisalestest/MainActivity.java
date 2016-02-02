@@ -21,17 +21,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        Log.d(LOG_TAG, "Started Downloading...");
-        new DownloadFileTask(true).execute("FILETIMES.XML");
-        Log.d(LOG_TAG, "Should be finished...");
+        new DownloadFileTask(true, this).execute("ITEMS.XML");
 
     }
 

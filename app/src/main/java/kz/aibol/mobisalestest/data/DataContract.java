@@ -32,16 +32,17 @@ public class DataContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FILETIMES;
 
         public static final String TABLE_NAME = "filetimes";
+
         public static final String COLUMN_FILENAME = "filename";
         public static final String COLUMN_FILENAMEXML = "filnamexml";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
-        public static Uri buildWeatherUri(long id) {
+        public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
-    public static final class Items implements BaseColumns {
+    public static final class ItemsEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_ITEMS).build();
@@ -51,8 +52,8 @@ public class DataContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMS;
 
-
         public static final String TABLE_NAME = "items";
+
         public static final String COLUMN_CODE = "code";
         public static final String COLUMN_NAME1 = "name1";
         public static final String COLUMN_NAME2 = "name2";
@@ -61,7 +62,7 @@ public class DataContract {
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
-        public static Uri buildWeatherUri(long id) {
+        public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -78,17 +79,17 @@ public class DataContract {
 
         public static final String TABLE_NAME = "units";
 
-        public static final String COLUMN_ID_ITEMS = "id_items";
+        public static final String COLUMN_ID_ITEMS = "iditems";
         public static final String COLUMN_CODE = "code";
         public static final String COLUMN_NAME1 = "name1";
         public static final String COLUMN_NAME2 = "name2";
         public static final String COLUMN_LINE_NR = "line_nr";
-        public static final String COLUMN_CONV_FACT1 = "conv_fact1";
-        public static final String COLUMN_CONV_FACT2 = "conv_fact2";
+        public static final String COLUMN_CONV_FACT1 = "convfact1";
+        public static final String COLUMN_CONV_FACT2 = "convfact2";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
-        public static Uri buildWeatherUri(long id) {
+        public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -105,14 +106,14 @@ public class DataContract {
 
         public static final String TABLE_NAME = "barcodes";
 
-        public static final String COLUMN_ID_UNIT = "id_unit";
-        public static final String COLUMN_ID_ITEMS = "id_items";
+        public static final String COLUMN_ID_UNIT = "idunit";
+        public static final String COLUMN_ID_ITEMS = "iditems";
         public static final String COLUMN_BARCODE = "barcode";
-        public static final String COLUMN_LINE_NR = "line_nr";
+        public static final String COLUMN_LINE_NR = "linenr";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
-        public static Uri buildWeatherUri(long id) {
+        public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -128,18 +129,18 @@ public class DataContract {
 
         public static final String TABLE_NAME = "prices";
 
-        public static final String COLUMN_ID_UNIT = "id_unit";
-        public static final String COLUMN_ID_ITEMS = "id_items";
+        public static final String COLUMN_ID_UNIT = "idunit";
+        public static final String COLUMN_ID_ITEMS = "iditems";
         public static final String COLUMN_CODE = "code";
         public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_CLSPECODE = "clspecode";
         public static final String COLUMN_BEGDATE = "begdate";
         public static final String COLUMN_ENDDATE = "enddate";
-        public static final String COLUMN_UNIT_CONVERT = "unit_convert";
+        public static final String COLUMN_UNIT_CONVERT = "unitconvert";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
-        public static Uri buildWeatherUri(long id) {
+        public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
@@ -163,7 +164,7 @@ public class DataContract {
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
-        public static Uri buildWeatherUri(long id) {
+        public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }

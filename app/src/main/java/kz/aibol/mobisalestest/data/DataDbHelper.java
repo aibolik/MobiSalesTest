@@ -30,15 +30,15 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 FiletimesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
                 ");";
 
-        final String SQL_CREATE_ITEMS_TABLE = "CREATE TABLE " + Items.TABLE_NAME + " (" +
-                Items._ID + " INTEGER PRIMARY KEY," +
-                Items.COLUMN_CODE + " TEXT NOT NULL, " +
-                Items.COLUMN_NAME1 + " TEXT NOT NULL, " +
-                Items.COLUMN_NAME2 + " TEXT NOT NULL, " +
-                Items.COLUMN_SPECODE + " TEXT NOT NULL," +
-                Items.COLUMN_STGRPCODE + " TEXT NOT NULL, " +
-                Items.COLUMN_CDATE + " DATE NOT NULL, " +
-                Items.COLUMN_CTIME + " DATETIME NOT NULL" +
+        final String SQL_CREATE_ITEMS_TABLE = "CREATE TABLE " + ItemsEntry.TABLE_NAME + " (" +
+                ItemsEntry._ID + " INTEGER PRIMARY KEY," +
+                ItemsEntry.COLUMN_CODE + " TEXT NOT NULL, " +
+                ItemsEntry.COLUMN_NAME1 + " TEXT NOT NULL, " +
+                ItemsEntry.COLUMN_NAME2 + " TEXT NOT NULL, " +
+                ItemsEntry.COLUMN_SPECODE + " TEXT NOT NULL," +
+                ItemsEntry.COLUMN_STGRPCODE + " TEXT NOT NULL, " +
+                ItemsEntry.COLUMN_CDATE + " DATE NOT NULL, " +
+                ItemsEntry.COLUMN_CTIME + " DATETIME NOT NULL" +
                 ");";
 
         final String SQL_CREATE_UNITS_TABLE = "CREATE TABLE " + UnitsEntry.TABLE_NAME + " (" +
@@ -65,22 +65,16 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 ");";
 
         final String SQL_CREATE_PRICES_TABLE = "CREATE TABLE " + PricesEntry.TABLE_NAME + " (" +
-                PricesEntry._ID + " INTEGER PRIMARY KEY," +
+                PricesEntry._ID + " INTEGER PRIMARY KEY, " +
                 PricesEntry.COLUMN_ID_UNIT + " INTEGER NOT NULL, " +
                 PricesEntry.COLUMN_ID_ITEMS + " INTEGER NOT NULL, " +
                 PricesEntry.COLUMN_CODE + " TEXT NOT NULL, " +
-                PricesEntry.COLUMN_CLSPECODE + " STRING NOT NULL " +
-                PricesEntry.COLUMN_BEGDATE + " DATE NOT NULL " +
-                PricesEntry.COLUMN_ENDDATE + " DATE NOT NULL " +
-                PricesEntry.COLUMN_UNIT_CONVERT + " BOOLEAN NOT NULL " +
-                PricesEntry.COLUMN_CDATE + " DATE NOT NULL " +
+                PricesEntry.COLUMN_CLSPECODE + " TEXT NOT NULL, " +
+                PricesEntry.COLUMN_BEGDATE + " DATE NOT NULL, " +
+                PricesEntry.COLUMN_ENDDATE + " DATE NOT NULL, " +
+                PricesEntry.COLUMN_UNIT_CONVERT + " INTEGER NOT NULL, " +
+                PricesEntry.COLUMN_CDATE + " DATE NOT NULL, " +
                 PricesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
-                /*
-                " FOREIGN KEY (" + PricesEntry.COLUMN_ID_UNIT + ") REFERENCES " +
-                UnitsEntry.TABLE_NAME + " (" + UnitsEntry._ID + "), " +
-                " FOREIGN KEY (" + PricesEntry.COLUMN_ID_ITEMS + ") REFERENCES " +
-                Items.TABLE_NAME + " (" + Items._ID + "), " +
-                */
                 ");";
 
         final String SQL_CREATE_ITEMFILES_TABLE = "CREATE TABLE " + ItemfilesEntry.TABLE_NAME + " (" +
@@ -89,8 +83,8 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 ItemfilesEntry.COLUMN_FILETYPE + " TEXT NOT NULL, " +
                 ItemfilesEntry.COLUMN_FILENAME + " TEXT NOT NULL, " +
                 ItemfilesEntry.COLUMN_LINENO + " INTEGER NOT NULL, " +
-                ItemfilesEntry.COLUMN_DEFAULT + " BOOLEAN NOT NULL, " +
-                ItemfilesEntry.COLUMN_CDATE + " DATE NOT NULL " +
+                ItemfilesEntry.COLUMN_DEFAULT + " INTEGER NOT NULL, " +
+                ItemfilesEntry.COLUMN_CDATE + " DATE NOT NULL, " +
                 ItemfilesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
                 ");";
 
@@ -107,7 +101,7 @@ public class DataDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + FiletimesEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + Items.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ItemsEntry.TABLE_NAME);
         db.execSQL("DROP TALBE IF EXISTS " + UnitsEntry.TABLE_NAME);
         db.execSQL("DROP TALBE IF EXISTS " + BarcodesEntry.TABLE_NAME);
         db.execSQL("DROP TALBE IF EXISTS " + PricesEntry.TABLE_NAME);

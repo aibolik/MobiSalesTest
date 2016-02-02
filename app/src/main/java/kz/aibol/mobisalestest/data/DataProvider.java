@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by aibol on 2/2/16.
@@ -37,6 +38,18 @@ public class DataProvider extends ContentProvider {
         return matcher;
     }
 
+    private boolean isDataInTable(String TableName, String dbfield, long fieldValue) {
+        SQLiteDatabase sqldb = mOpenHelper.getReadableDatabase();
+        String Query = "Select * from " + TableName + " where " + dbfield + " = " + fieldValue;
+        Cursor cursor = sqldb.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
     @Override
     public boolean onCreate() {
         mOpenHelper = new DataDbHelper(getContext());
@@ -52,7 +65,7 @@ public class DataProvider extends ContentProvider {
             case FILETIMES:
                 return DataContract.FiletimesEntry.CONTENT_TYPE;
             case ITEMS:
-                return DataContract.Items.CONTENT_TYPE;
+                return DataContract.ItemsEntry.CONTENT_TYPE;
             case UNITS:
                 return DataContract.UnitsEntry.CONTENT_TYPE;
             case BARCODES:
@@ -86,7 +99,7 @@ public class DataProvider extends ContentProvider {
                 break;
             case ITEMS:
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        DataContract.Items.TABLE_NAME,
+                        DataContract.ItemsEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -155,56 +168,105 @@ public class DataProvider extends ContentProvider {
 
         switch (match) {
             case FILETIMES: {
-                long _id = db.insert(DataContract.FiletimesEntry.TABLE_NAME, null, values);
-                if (_id > 0) {
-                    returnUri = DataContract.FiletimesEntry.buildWeatherUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                long id = values.getAsInteger(DataContract.FiletimesEntry._ID);
+                if(isDataInTable(DataContract.FiletimesEntry.TABLE_NAME,
+                        DataContract.FiletimesEntry._ID,
+                        id)) {
+                    returnUri = DataContract.FiletimesEntry.buildDataUri(id);
+                }
+                else {
+                    long _id = db.insert(DataContract.FiletimesEntry.TABLE_NAME, null, values);
+                    if (_id > 0) {
+                        returnUri = DataContract.FiletimesEntry.buildDataUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
                 }
                 break;
             }
             case ITEMS: {
-                long _id = db.insert(DataContract.Items.TABLE_NAME, null, values);
-                if (_id > 0) {
-                    returnUri = DataContract.Items.buildWeatherUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                long id = values.getAsInteger(DataContract.ItemsEntry._ID);
+                if(isDataInTable(DataContract.ItemsEntry.TABLE_NAME,
+                        DataContract.ItemsEntry._ID,
+                        id)) {
+                    returnUri = DataContract.ItemsEntry.buildDataUri(id);
                 }
+                else {
+                    long _id = db.insert(DataContract.ItemsEntry.TABLE_NAME, null, values);
+                    if (_id > 0) {
+                        returnUri = DataContract.ItemsEntry.buildDataUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
+                }
+
                 break;
             }
             case UNITS: {
-                long _id = db.insert(DataContract.UnitsEntry.TABLE_NAME, null, values);
-                if (_id > 0) {
-                    returnUri = DataContract.UnitsEntry.buildWeatherUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                long id = values.getAsInteger(DataContract.UnitsEntry._ID);
+                if(isDataInTable(DataContract.UnitsEntry.TABLE_NAME,
+                        DataContract.UnitsEntry._ID,
+                        id)) {
+                    returnUri = DataContract.UnitsEntry.buildDataUri(id);
+                }
+                else {
+                    long _id = db.insert(DataContract.UnitsEntry.TABLE_NAME, null, values);
+                    if (_id > 0) {
+                        returnUri = DataContract.UnitsEntry.buildDataUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
                 }
                 break;
             }
             case BARCODES: {
-                long _id = db.insert(DataContract.BarcodesEntry.TABLE_NAME, null, values);
-                if (_id > 0) {
-                    returnUri = DataContract.BarcodesEntry.buildWeatherUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                long id = values.getAsInteger(DataContract.BarcodesEntry._ID);
+                if(isDataInTable(DataContract.BarcodesEntry.TABLE_NAME,
+                        DataContract.BarcodesEntry._ID,
+                        id)) {
+                    returnUri = DataContract.BarcodesEntry.buildDataUri(id);
+                }
+                else {
+                    long _id = db.insert(DataContract.BarcodesEntry.TABLE_NAME, null, values);
+                    if (_id > 0) {
+                        returnUri = DataContract.BarcodesEntry.buildDataUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
                 }
                 break;
             }
             case PRICES: {
-                long _id = db.insert(DataContract.PricesEntry.TABLE_NAME, null, values);
-                if (_id > 0) {
-                    returnUri = DataContract.PricesEntry.buildWeatherUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                long id = values.getAsInteger(DataContract.PricesEntry._ID);
+                if(isDataInTable(DataContract.PricesEntry.TABLE_NAME,
+                        DataContract.PricesEntry._ID,
+                        id)) {
+                    returnUri = DataContract.PricesEntry.buildDataUri(id);
+                }
+                else {
+                    long _id = db.insert(DataContract.PricesEntry.TABLE_NAME, null, values);
+                    if (_id > 0) {
+                        returnUri = DataContract.PricesEntry.buildDataUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
                 }
                 break;
             }
             case ITEMFILES: {
-                long _id = db.insert(DataContract.ItemfilesEntry.TABLE_NAME, null, values);
-                if (_id > 0) {
-                    returnUri = DataContract.ItemfilesEntry.buildWeatherUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                long id = values.getAsInteger(DataContract.ItemfilesEntry._ID);
+                if(isDataInTable(DataContract.ItemfilesEntry.TABLE_NAME,
+                        DataContract.ItemfilesEntry._ID,
+                        id)) {
+                    returnUri = DataContract.ItemfilesEntry.buildDataUri(id);
+                }
+                else {
+                    long _id = db.insert(DataContract.ItemfilesEntry.TABLE_NAME, null, values);
+                    if (_id > 0) {
+                        returnUri = DataContract.ItemfilesEntry.buildDataUri(_id);
+                    } else {
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    }
                 }
                 break;
             }
@@ -229,7 +291,7 @@ public class DataProvider extends ContentProvider {
                 rowsDeleted = db.delete(DataContract.FiletimesEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case ITEMS:
-                rowsDeleted = db.delete(DataContract.Items.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(DataContract.ItemsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case UNITS:
                 rowsDeleted = db.delete(DataContract.UnitsEntry.TABLE_NAME, selection, selectionArgs);
@@ -265,7 +327,7 @@ public class DataProvider extends ContentProvider {
                 rowsUpdated = db.update(DataContract.FiletimesEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case ITEMS:
-                rowsUpdated = db.update(DataContract.Items.TABLE_NAME, values, selection, selectionArgs);
+                rowsUpdated = db.update(DataContract.ItemsEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case UNITS:
                 rowsUpdated = db.update(DataContract.UnitsEntry.TABLE_NAME, values, selection, selectionArgs);
@@ -287,4 +349,5 @@ public class DataProvider extends ContentProvider {
         }
         return rowsUpdated;
     }
+
 }

@@ -1,6 +1,8 @@
 package kz.aibol.mobisalestest;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -17,8 +19,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+
+import kz.aibol.mobisalestest.data.DataContract;
 
 /**
  * Created by aibol on 1/31/16.
@@ -27,9 +33,11 @@ import java.util.Vector;
 public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
 
     boolean download;
+    Context mContext;
 
-    public DownloadFileTask(boolean download) {
+    public DownloadFileTask(boolean download, Context context) {
         this.download = download;
+        mContext = context;
     }
 
     private final String LOG_TAG = DownloadFileTask.class.getSimpleName();
@@ -103,13 +111,13 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_DOCUMENT) {
-                    Log.d(LOG_TAG, "Start document");
+                    //Log.d(LOG_TAG, "Start document");
                 } else if (eventType == XmlPullParser.START_TAG) {
                     tag = xpp.getName();
                     tag_open = true;
-                    Log.d(LOG_TAG, "Start tag " + tag);
+                    //Log.d(LOG_TAG, "Start tag " + tag);
                 } else if (eventType == XmlPullParser.END_TAG) {
-                    Log.d(LOG_TAG, "End tag " + xpp.getName());
+                    //Log.d(LOG_TAG, "End tag " + xpp.getName());
                     if (tag_open) {
                         instance.put(tag, text);
                     } else {
@@ -120,11 +128,11 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
                     tag_open = false;
                 } else if (eventType == XmlPullParser.TEXT) {
                     text = xpp.getText();
-                    Log.d(LOG_TAG, "Text " + text);
+                    //Log.d(LOG_TAG, "Text " + text);
                 }
                 eventType = xpp.next();
             }
-            Log.d(LOG_TAG, "End document");
+            //Log.d(LOG_TAG, "End document");
 
             writeToDatabase(listOfInstances, filename);
             /*
@@ -162,13 +170,113 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
     }
 
     private void writeToDatabase(ArrayList<Map<String, String>> listOfInstances, String filename) {
-        //Test/FILETIMES.XML
         filename = filename.substring(6, filename.length() - 4);
-        ContentValues values = new ContentValues();
+        ArrayList<String> keys = new ArrayList<>();
+        Uri insertUri;
         switch (filename) {
             case "FILETIMES": {
-                //values.put();
+                insertUri = DataContract.FiletimesEntry.CONTENT_URI;
+                keys.add(DataContract.FiletimesEntry._ID);
+                keys.add(DataContract.FiletimesEntry.COLUMN_FILENAME);
+                keys.add(DataContract.FiletimesEntry.COLUMN_FILENAMEXML);
+                keys.add(DataContract.FiletimesEntry.COLUMN_CDATE);
+                keys.add(DataContract.FiletimesEntry.COLUMN_CTIME);
+                break;
             }
+            case "ITEMS": {
+                insertUri = DataContract.ItemsEntry.CONTENT_URI;
+                keys.add(DataContract.ItemsEntry._ID);
+                keys.add(DataContract.ItemsEntry.COLUMN_CODE);
+                keys.add(DataContract.ItemsEntry.COLUMN_NAME1);
+                keys.add(DataContract.ItemsEntry.COLUMN_NAME2);
+                keys.add(DataContract.ItemsEntry.COLUMN_SPECODE);
+                keys.add(DataContract.ItemsEntry.COLUMN_STGRPCODE);
+                keys.add(DataContract.ItemsEntry.COLUMN_CDATE);
+                keys.add(DataContract.ItemsEntry.COLUMN_CTIME);
+                break;
+            }
+            case "UNITS": {
+                insertUri = DataContract.UnitsEntry.CONTENT_URI;
+                keys.add(DataContract.UnitsEntry._ID);
+                keys.add(DataContract.UnitsEntry.COLUMN_ID_ITEMS);
+                keys.add(DataContract.UnitsEntry.COLUMN_CODE);
+                keys.add(DataContract.UnitsEntry.COLUMN_NAME1);
+                keys.add(DataContract.UnitsEntry.COLUMN_NAME2);
+                keys.add(DataContract.UnitsEntry.COLUMN_LINE_NR);
+                keys.add(DataContract.UnitsEntry.COLUMN_CONV_FACT1);
+                keys.add(DataContract.UnitsEntry.COLUMN_CONV_FACT2);
+                keys.add(DataContract.UnitsEntry.COLUMN_CDATE);
+                keys.add(DataContract.UnitsEntry.COLUMN_CTIME);
+                break;
+            }
+            case "BARCODES": {
+                insertUri = DataContract.BarcodesEntry.CONTENT_URI;
+                keys.add(DataContract.BarcodesEntry._ID);
+                keys.add(DataContract.BarcodesEntry.COLUMN_ID_UNIT);
+                keys.add(DataContract.BarcodesEntry.COLUMN_ID_ITEMS);
+                keys.add(DataContract.BarcodesEntry.COLUMN_BARCODE);
+                keys.add(DataContract.BarcodesEntry.COLUMN_LINE_NR);
+                keys.add(DataContract.BarcodesEntry.COLUMN_CDATE);
+                keys.add(DataContract.BarcodesEntry.COLUMN_CTIME);
+                break;
+            }
+            case "PRICES": {
+                insertUri = DataContract.PricesEntry.CONTENT_URI;
+                keys.add(DataContract.PricesEntry._ID);
+                keys.add(DataContract.PricesEntry.COLUMN_ID_UNIT);
+                keys.add(DataContract.PricesEntry.COLUMN_ID_ITEMS);
+                keys.add(DataContract.PricesEntry.COLUMN_CODE);
+                keys.add(DataContract.PricesEntry.COLUMN_PRICE);
+                keys.add(DataContract.PricesEntry.COLUMN_CLSPECODE);
+                keys.add(DataContract.PricesEntry.COLUMN_BEGDATE);
+                keys.add(DataContract.PricesEntry.COLUMN_ENDDATE);
+                keys.add(DataContract.PricesEntry.COLUMN_UNIT_CONVERT);
+                keys.add(DataContract.PricesEntry.COLUMN_CDATE);
+                keys.add(DataContract.PricesEntry.COLUMN_CTIME);
+                break;
+            }
+            case "ITEMFILES": {
+                insertUri = DataContract.ItemfilesEntry.CONTENT_URI;
+                keys.add(DataContract.ItemfilesEntry._ID);
+                keys.add(DataContract.ItemfilesEntry.COLUMN_ID_ITEMS);
+                keys.add(DataContract.ItemfilesEntry.COLUMN_FILETYPE);
+                keys.add(DataContract.ItemfilesEntry.COLUMN_FILENAME);
+                keys.add(DataContract.ItemfilesEntry.COLUMN_LINENO);
+                keys.add(DataContract.ItemfilesEntry.COLUMN_DEFAULT);
+                keys.add(DataContract.ItemfilesEntry.COLUMN_CDATE);
+                keys.add(DataContract.ItemfilesEntry.COLUMN_CTIME);
+                break;
+            }
+            default: {
+                throw new UnsupportedOperationException("Invalid filename");
+            }
+        }
+        for (Map<String, String> row : listOfInstances) {
+            ContentValues values = new ContentValues();
+            for (Map.Entry<String, String> entry : row.entrySet()) {
+                if (entry.getKey().equals("ID")) {
+                    values.put(DataContract.FiletimesEntry._ID, entry.getValue());
+                } else {
+                    values.put(entry.getKey().toLowerCase(), entry.getValue());
+                }
+            }
+            mContext.getContentResolver().insert(insertUri, values);
+            //printContentValues(values);
+        }
+    }
+
+    public void printContentValues(ContentValues vals) {
+        Set<Map.Entry<String, Object>> s = vals.valueSet();
+        Iterator itr = s.iterator();
+
+        Log.d("DatabaseSync", "ContentValue Length :: " + vals.size());
+
+        while (itr.hasNext()) {
+            Map.Entry me = (Map.Entry) itr.next();
+            String key = me.getKey().toString();
+            Object value = me.getValue();
+
+            Log.d("DatabaseSync", "Key:" + key + ", values:" + (String) (value == null ? null : value.toString()));
         }
     }
 
