@@ -46,7 +46,7 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
         } catch (IOException e) {
             Log.e(LOG_TAG, e.getMessage());
             return false;
-        } catch (XmlPullParserException e ){
+        } catch (XmlPullParserException e) {
             Log.e(LOG_TAG, e.getMessage());
             return false;
         }
@@ -75,12 +75,12 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
 
             inputStream = ftp.retrieveFileStream(filename);
 
-            if(inputStream == null) {
+            if (inputStream == null) {
                 Log.d(LOG_TAG, "File does not exist");
                 return false;
             }
 
-            if(!download) {
+            if (!download) {
                 return true;
             }
 
@@ -88,20 +88,26 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(inputStream,null);
+            xpp.setInput(inputStream, null);
 
+<<<<<<< HEAD
             Vector<ContentValues> cVVector = new Vector<ContentValues>();
             ContentValues dataValues = new ContentValues();
+=======
+            ArrayList<Map<String, String>> listOfInstances = new ArrayList<Map<String, String>>();
+            Map<String, String> instance = new HashMap<String, String>();
+>>>>>>> ca7259cc87000873d5a2c9ec723b2250f1490e69
             String tag = "";
             String text = "";
             Boolean tag_open = false;
 
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                if(eventType == XmlPullParser.START_DOCUMENT) {
-                    Log.d(LOG_TAG,"Start document");
-                } else if(eventType == XmlPullParser.START_TAG) {
+                if (eventType == XmlPullParser.START_DOCUMENT) {
+                    Log.d(LOG_TAG, "Start document");
+                } else if (eventType == XmlPullParser.START_TAG) {
                     tag = xpp.getName();
+<<<<<<< HEAD
                     tag_open  = true;
                 } else if(eventType == XmlPullParser.END_TAG) {
                     if (tag_open == true ){
@@ -111,24 +117,47 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
                         if (dataValues.size() > 0 )
                             cVVector.add(dataValues);
                             dataValues = new ContentValues();
+=======
+                    tag_open = true;
+                    Log.d(LOG_TAG, "Start tag " + tag);
+                } else if (eventType == XmlPullParser.END_TAG) {
+                    Log.d(LOG_TAG, "End tag " + xpp.getName());
+                    if (tag_open) {
+                        instance.put(tag, text);
+                    } else {
+                        if (instance.size() > 0)
+                            listOfInstances.add(instance);
+                        instance = new HashMap<String, String>();
+>>>>>>> ca7259cc87000873d5a2c9ec723b2250f1490e69
                     }
                     tag_open = false;
-                } else if(eventType == XmlPullParser.TEXT) {
+                } else if (eventType == XmlPullParser.TEXT) {
                     text = xpp.getText();
+<<<<<<< HEAD
 
+=======
+                    Log.d(LOG_TAG, "Text " + text);
+>>>>>>> ca7259cc87000873d5a2c9ec723b2250f1490e69
                 }
                 eventType = xpp.next();
             }
-            Log.d(LOG_TAG,"End document");
+            Log.d(LOG_TAG, "End document");
 
+<<<<<<< HEAD
             Log.d(LOG_TAG, "Number of instances: "+ cVVector.size());
             for (ContentValues row : cVVector){
                 Log.d(LOG_TAG,""+"Size of new instance is: "+row.size());
                 for(String key: row.keySet()){
                     Object value = row.get(key);
                     Log.d(LOG_TAG, "Key: "+ key +" Value: "+value);
+=======
+            Log.d(LOG_TAG, "Number of instances: " + listOfInstances.size());
+            for (Map<String, String> row : listOfInstances) {
+                Log.d(LOG_TAG, "" + "Size of new instance is: " + row.size());
+                for (Map.Entry<String, String> entry : row.entrySet()) {
+                    Log.d(LOG_TAG, "Key: " + entry.getKey() + " Value: " + entry.getValue());
+>>>>>>> ca7259cc87000873d5a2c9ec723b2250f1490e69
                 }
-
             }
             //Now just return listOfInstances arrayList.
             /*
