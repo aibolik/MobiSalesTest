@@ -1,5 +1,6 @@
 package kz.aibol.mobisalestest;
 
+import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by aibol on 1/31/16.
@@ -88,6 +90,9 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput(inputStream, null);
 
+//            Vector<ContentValues> cVVector = new Vector<ContentValues>();
+//            ContentValues values = new ContentValues();
+
             ArrayList<Map<String, String>> listOfInstances = new ArrayList<Map<String, String>>();
             Map<String, String> instance = new HashMap<String, String>();
             String tag = "";
@@ -121,6 +126,8 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
             }
             Log.d(LOG_TAG, "End document");
 
+            writeToDatabase(listOfInstances, filename);
+            /*
             Log.d(LOG_TAG, "Number of instances: " + listOfInstances.size());
             for (Map<String, String> row : listOfInstances) {
                 Log.d(LOG_TAG, "" + "Size of new instance is: " + row.size());
@@ -128,6 +135,7 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
                     Log.d(LOG_TAG, "Key: " + entry.getKey() + " Value: " + entry.getValue());
                 }
             }
+            */
             //Now just return listOfInstances arrayList.
             /*
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -152,4 +160,16 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
             }
         }
     }
+
+    private void writeToDatabase(ArrayList<Map<String, String>> listOfInstances, String filename) {
+        //Test/FILETIMES.XML
+        filename = filename.substring(6, filename.length() - 4);
+        ContentValues values = new ContentValues();
+        switch (filename) {
+            case "FILETIMES": {
+                //values.put();
+            }
+        }
+    }
+
 }
