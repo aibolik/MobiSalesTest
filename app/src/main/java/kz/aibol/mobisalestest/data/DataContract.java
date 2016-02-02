@@ -20,6 +20,7 @@ public class DataContract {
     public static final String PATH_BARCODES = "barcodes";
     public static final String PATH_PRICES = "prices";
     public static final String PATH_ITEMFILES = "itemfiles";
+
     public static final class FiletimesEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
