@@ -22,6 +22,25 @@ public class DataDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        final String SQL_CREATE_FILETIMES_TABLE = "CREATE TABLE " + FiletimesEntry.TABLE_NAME + " (" +
+                FiletimesEntry._ID + " INTEGER PRIMARY KEY," +
+                FiletimesEntry.COLUMN_FILENAME + " TEXT UNIQUE NOT NULL, " +
+                FiletimesEntry.COLUMN_FILENAMEXML + " TEXT NOT NULL, " +
+                FiletimesEntry.COLUMN_CDATE + " DATE NOT NULL, " +
+                FiletimesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
+                ");";
+
+        final String SQL_CREATE_ITEMS_TABLE = "CREATE TABLE " + Items.TABLE_NAME + " (" +
+                Items._ID + " INTEGER PRIMARY KEY," +
+                Items.COLUMN_CODE + " TEXT NOT NULL, " +
+                Items.COLUMN_NAME1 + " TEXT NOT NULL, " +
+                Items.COLUMN_NAME2 + " TEXT NOT NULL, " +
+                Items.COLUMN_SPECODE + " TEXT NOT NULL," +
+                Items.COLUMN_STGRPCODE + " TEXT NOT NULL, " +
+                Items.COLUMN_CDATE + " DATE NOT NULL, " +
+                Items.COLUMN_CTIME + " DATETIME NOT NULL" +
+                ");";
+
         final String SQL_CREATE_UNITS_TABLE = "CREATE TABLE " + UnitsEntry.TABLE_NAME + " (" +
                 UnitsEntry._ID + " INTEGER PRIMARY KEY, " +
                 UnitsEntry.COLUMN_ID_ITEMS + " INTEGER NOT NULL, " +
@@ -45,6 +64,8 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 BarcodesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
                 ");";
 
+        db.execSQL(SQL_CREATE_FILETIMES_TABLE);
+        db.execSQL(SQL_CREATE_ITEMS_TABLE);
         db.execSQL(SQL_CREATE_UNITS_TABLE);
         db.execSQL(SQL_CREATE_BARCODES_TABLE);
     }
@@ -53,5 +74,8 @@ public class DataDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TALBE IF EXISTS " + UnitsEntry.TABLE_NAME);
         db.execSQL("DROP TALBE IF EXISTS " + BarcodesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FiletimesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Items.TABLE_NAME);
+        onCreate(db);
     }
 }
