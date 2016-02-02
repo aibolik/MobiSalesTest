@@ -137,6 +137,8 @@ public class DataContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMFILES;
 
+        public static final String TABLE_NAME = "itemfiles";
+
         public static final String COLUMN_ID_ITEMS = "iditems";
         public static final String COLUMN_FILETYPE = "filetype";
         public static final String COLUMN_FILENAME = "filename";

@@ -64,18 +64,54 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 BarcodesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
                 ");";
 
+        final String SQL_CREATE_PRICES_TABLE = "CREATE TABLE " + PricesEntry.TABLE_NAME + " (" +
+                PricesEntry._ID + " INTEGER PRIMARY KEY," +
+                PricesEntry.COLUMN_ID_UNIT + " INTEGER NOT NULL, " +
+                PricesEntry.COLUMN_ID_ITEMS + " INTEGER NOT NULL, " +
+                PricesEntry.COLUMN_CODE + " TEXT NOT NULL, " +
+                PricesEntry.COLUMN_CLSPECODE + " STRING NOT NULL " +
+                PricesEntry.COLUMN_BEGDATE + " DATE NOT NULL " +
+                PricesEntry.COLUMN_ENDDATE + " DATE NOT NULL " +
+                PricesEntry.COLUMN_UNIT_CONVERT + " BOOLEAN NOT NULL " +
+                PricesEntry.COLUMN_CDATE + " DATE NOT NULL " +
+                PricesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
+                /*
+                " FOREIGN KEY (" + PricesEntry.COLUMN_ID_UNIT + ") REFERENCES " +
+                UnitsEntry.TABLE_NAME + " (" + UnitsEntry._ID + "), " +
+                " FOREIGN KEY (" + PricesEntry.COLUMN_ID_ITEMS + ") REFERENCES " +
+                Items.TABLE_NAME + " (" + Items._ID + "), " +
+                */
+                ");";
+
+        final String SQL_CREATE_ITEMFILES_TABLE = "CREATE TABLE " + ItemfilesEntry.TABLE_NAME + " (" +
+                ItemfilesEntry._ID + " INTEGER PRIMARY KEY," +
+                ItemfilesEntry.COLUMN_ID_ITEMS + " INTEGER NOT NULL, " +
+                ItemfilesEntry.COLUMN_FILETYPE + " TEXT NOT NULL, " +
+                ItemfilesEntry.COLUMN_FILENAME + " TEXT NOT NULL, " +
+                ItemfilesEntry.COLUMN_LINENO + " INTEGER NOT NULL, " +
+                ItemfilesEntry.COLUMN_DEFAULT + " BOOLEAN NOT NULL, " +
+                ItemfilesEntry.COLUMN_CDATE + " DATE NOT NULL " +
+                ItemfilesEntry.COLUMN_CTIME + " DATETIME NOT NULL " +
+                ");";
+
         db.execSQL(SQL_CREATE_FILETIMES_TABLE);
         db.execSQL(SQL_CREATE_ITEMS_TABLE);
         db.execSQL(SQL_CREATE_UNITS_TABLE);
         db.execSQL(SQL_CREATE_BARCODES_TABLE);
+        db.execSQL(SQL_CREATE_PRICES_TABLE);
+        db.execSQL(SQL_CREATE_ITEMFILES_TABLE);
     }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TALBE IF EXISTS " + UnitsEntry.TABLE_NAME);
-        db.execSQL("DROP TALBE IF EXISTS " + BarcodesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FiletimesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + Items.TABLE_NAME);
+        db.execSQL("DROP TALBE IF EXISTS " + UnitsEntry.TABLE_NAME);
+        db.execSQL("DROP TALBE IF EXISTS " + BarcodesEntry.TABLE_NAME);
+        db.execSQL("DROP TALBE IF EXISTS " + PricesEntry.TABLE_NAME);
+        db.execSQL("DROP TALBE IF EXISTS " + ItemfilesEntry.TABLE_NAME);
         onCreate(db);
     }
 }
