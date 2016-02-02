@@ -18,7 +18,8 @@ public class DataContract {
     public static final String PATH_ITEMS = "items";
     public static final String PATH_UNITS = "units";
     public static final String PATH_BARCODES = "barcodes";
-
+    public static final String PATH_PRICES = "prices";
+    public static final String PATH_ITEMFILES = "itemfiles";
     public static final class FiletimesEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -99,6 +100,47 @@ public class DataContract {
         public static final String COLUMN_ID_ITEMS = "id_items";
         public static final String COLUMN_BARCODE = "barcode";
         public static final String COLUMN_LINE_NR = "line_nr";
+        public static final String COLUMN_CDATE = "cdate";
+        public static final String COLUMN_CTIME = "ctime";
+    }
+    public static final class PricesEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_PRICES).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRICES;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRICES;
+
+        public static final String TABLE_NAME = "prices";
+
+        public static final String COLUMN_ID_UNIT = "id_unit";
+        public static final String COLUMN_ID_ITEMS = "id_items";
+        public static final String COLUMN_CODE = "code";
+        public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_CLSPECODE = "clspecode";
+        public static final String COLUMN_BEGDATE = "begdate";
+        public static final String COLUMN_ENDDATE = "enddate";
+        public static final String COLUMN_UNIT_CONVERT = "unit_convert";
+        public static final String COLUMN_CDATE = "cdate";
+        public static final String COLUMN_CTIME = "ctime";
+    }
+    public static final class ItemfilesEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ITEMFILES).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMFILES;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMFILES;
+
+        public static final String COLUMN_ID_ITEMS = "iditems";
+        public static final String COLUMN_FILETYPE = "filetype";
+        public static final String COLUMN_FILENAME = "filename";
+        public static final String COLUMN_LINENO = "lineno";
+        public static final String COLUMN_DEFAULT = "default";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
     }
