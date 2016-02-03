@@ -17,14 +17,12 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import kz.aibol.mobisalestest.data.DataContract;
 
@@ -48,7 +46,7 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
         this.filename = filename;
         this.progress = progress;
 
-        if(mainfile && !download) {
+        if (mainfile && !download) {
             dialog = new ProgressDialog(mContext);
             dialog.setMessage("Downloading database");
             dialog.setCanceledOnTouchOutside(false);
@@ -61,7 +59,7 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if(dialog != null) {
+        if (dialog != null && !dialog.isShowing()) {
             dialog.show();
         }
     }
@@ -86,30 +84,30 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if(mainfile && !download && !result) {
+        if (mainfile && !download && !result) {
             Toast.makeText(mContext, "Filetimes file not ready", Toast.LENGTH_LONG).show();
-            if(dialog != null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
             return;
         }
-        if(mainfile && result && !download) {
+        if (mainfile && result && !download) {
             new DownloadFileTask(mContext, true, true, "FILETIMES", 0).execute();
             return;
         }
-        if(mainfile && download && result) {
+        if (mainfile && download && result) {
             new DownloadFileTask(mContext, false, false, "ITEMS", 1).execute();
             new DownloadFileTask(mContext, false, false, "UNITS", 2).execute();
             new DownloadFileTask(mContext, false, false, "BARCODES", 3).execute();
             new DownloadFileTask(mContext, false, false, "PRICES", 4).execute();
             new DownloadFileTask(mContext, false, false, "ITEMFILES", 5).execute();
         }
-        if(!mainfile && !download && result) {
+        if (!mainfile && !download && result) {
             new DownloadFileTask(mContext, true, false, filename, progress).execute();
         }
-        if(progress == 5 && download) {
+        if (progress == 5 && download) {
             Toast.makeText(mContext, "Database ready to use", Toast.LENGTH_LONG).show();
-            if(dialog != null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
         }
@@ -136,10 +134,9 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
 
             BufferedReader reader = null;
 
-            if(!download) {
+            if (!download) {
                 inputStream = ftp.retrieveFileStream(filename + ".RDY");
-            }
-            else {
+            } else {
                 inputStream = ftp.retrieveFileStream(filename + ".XML");
             }
 
@@ -174,44 +171,20 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
                     tag_open = true;
                     //Log.d(LOG_TAG, "Start tag " + tag);
                 } else if (eventType == XmlPullParser.END_TAG) {
-                    //Log.d(LOG_TAG, "End tag " + xpp.getName());
                     if (tag_open) {
                         instance.put(tag, text);
+                    } else if (instance.size() > 0) {
+                        listOfInstances.add(instance);
+                        instance = new HashMap<String, String>();
                     }
-                } else if (eventType == XmlPullParser.END_TAG) {
                     tag_open = false;
                 } else if (eventType == XmlPullParser.TEXT) {
                     text = xpp.getText();
                 }
                 eventType = xpp.next();
             }
-            //Log.d(LOG_TAG, "End document");
 
             writeToDatabase(listOfInstances, filename);
-            /*
-            Log.d(LOG_TAG, "Number of instances: " + listOfInstances.size());
-            for (Map<String, String> row : listOfInstances) {
-                Log.d(LOG_TAG, "" + "Size of new instance is: " + row.size());
-                for (String key : row.keySet()) {
-                    Object value = row.get(key);
-                    Log.d(LOG_TAG, "Key: " + key + " Value: " + value);
-
-
-                }
-            }
-            */
-            //Now just return listOfInstances arrayList.
-            /*
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Log.d(LOG_TAG, "Buffer line: " + line);
-                buffer.append(line + "\n");
-            }
-            Log.d(LOG_TAG, "Output");
-            Log.d(LOG_TAG, buffer.toString());
-            */
             return true;
 
         } catch (IOException e) {
@@ -262,11 +235,9 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
             for (Map.Entry<String, String> entry : row.entrySet()) {
                 if (entry.getKey().equals("ID")) {
                     values.put(DataContract.FiletimesEntry._ID, entry.getValue());
-                }
-                else if(entry.getKey().equals("DEFAULT")) {
+                } else if (entry.getKey().equals("DEFAULT")) {
                     values.put("default1", entry.getValue());
-                }
-                else {
+                } else {
                     values.put(entry.getKey().toLowerCase(), entry.getValue());
                 }
             }

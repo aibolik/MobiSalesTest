@@ -20,9 +20,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="kz.aibol.mobisalestest"
-            android:name=".data.DataProvider" />
+            android:name=".data.DataProvider"
+            android:authorities="kz.aibol.mobisalestest" />
+
+        <activity
+            android:name=".ListActivity"
+            android:label="@string/title_activity_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="kz.aibol.mobisalestest.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

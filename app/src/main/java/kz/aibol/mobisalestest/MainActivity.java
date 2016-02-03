@@ -1,16 +1,13 @@
 package kz.aibol.mobisalestest;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import kz.aibol.mobisalestest.data.DataContract;
 import kz.aibol.mobisalestest.session.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
             session.setLogin(true);
             new DownloadFileTask(this, false, true, "FILETIMES", 0).execute();
         }
+
+        findViewById(R.id.list).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -53,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
             this.deleteDatabase("mobisales.db");
             session.setLogin(false);
             finish();
+            return true;
+        }
+
+        if(id == R.id.action_sync) {
+            this.deleteDatabase("mobisales.db");
+            new DownloadFileTask(this, false, true, "FILETIMES", 0).execute();
             return true;
         }
 

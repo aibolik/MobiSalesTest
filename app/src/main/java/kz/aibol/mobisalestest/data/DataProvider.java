@@ -5,9 +5,9 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 /**
  * Created by aibol on 2/2/16.
@@ -23,6 +23,21 @@ public class DataProvider extends ContentProvider {
     static final int BARCODES = 400;
     static final int PRICES = 500;
     static final int ITEMFILES = 600;
+
+    private static final SQLiteQueryBuilder sItemWithPriceQueryBuiler;
+
+    static {
+        sItemWithPriceQueryBuiler = new SQLiteQueryBuilder();
+
+        sItemWithPriceQueryBuiler.setTables(
+                DataContract.ItemsEntry.TABLE_NAME + " INNER JOIN " +
+                        DataContract.PricesEntry.TABLE_NAME +
+                        " ON " + DataContract.ItemsEntry.TABLE_NAME +
+                        "." + DataContract.ItemsEntry._ID +
+                        " = " + DataContract.PricesEntry.TABLE_NAME +
+                        "." + DataContract.PricesEntry.COLUMN_ID_ITEMS);
+    }
+
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -98,8 +113,8 @@ public class DataProvider extends ContentProvider {
                 );
                 break;
             case ITEMS:
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        DataContract.ItemsEntry.TABLE_NAME,
+                retCursor = sItemWithPriceQueryBuiler.query(
+                        mOpenHelper.getReadableDatabase(),
                         projection,
                         selection,
                         selectionArgs,
@@ -107,6 +122,15 @@ public class DataProvider extends ContentProvider {
                         null,
                         sortOrder
                 );
+//                retCursor = mOpenHelper.getReadableDatabase().query(
+//                        DataContract.ItemsEntry.TABLE_NAME,
+//                        projection,
+//                        selection,
+//                        selectionArgs,
+//                        null,
+//                        null,
+//                        sortOrder
+//                );
                 break;
             case UNITS:
                 retCursor = mOpenHelper.getReadableDatabase().query(
@@ -152,6 +176,16 @@ public class DataProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
+//            case ITEMS_WITH_PRICES:
+//                retCursor = sItemWithPriceQueryBuiler.query(
+//                        mOpenHelper.getReadableDatabase(),
+//                        projection,
+//                        selection,
+//                        selectionArgs,
+//                        null,
+//                        null,
+//                        sortOrder
+//                );
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

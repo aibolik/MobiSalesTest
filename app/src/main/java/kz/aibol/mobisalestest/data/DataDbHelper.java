@@ -4,7 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import kz.aibol.mobisalestest.data.DataContract.*;
+import kz.aibol.mobisalestest.data.DataContract.BarcodesEntry;
+import kz.aibol.mobisalestest.data.DataContract.FiletimesEntry;
+import kz.aibol.mobisalestest.data.DataContract.ItemfilesEntry;
+import kz.aibol.mobisalestest.data.DataContract.ItemsEntry;
+import kz.aibol.mobisalestest.data.DataContract.PricesEntry;
+import kz.aibol.mobisalestest.data.DataContract.UnitsEntry;
 
 /**
  * Created by aibol on 2/2/16.
@@ -103,10 +108,10 @@ public class DataDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + FiletimesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ItemsEntry.TABLE_NAME);
-        db.execSQL("DROP TALBE IF EXISTS " + UnitsEntry.TABLE_NAME);
-        db.execSQL("DROP TALBE IF EXISTS " + BarcodesEntry.TABLE_NAME);
-        db.execSQL("DROP TALBE IF EXISTS " + PricesEntry.TABLE_NAME);
-        db.execSQL("DROP TALBE IF EXISTS " + ItemfilesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UnitsEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BarcodesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PricesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ItemfilesEntry.TABLE_NAME);
         onCreate(db);
     }
 }

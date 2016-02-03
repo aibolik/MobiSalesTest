@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="kz.aibol.mobisalestest.MainActivity">
+    <item android:id="@+id/action_sync"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_menu_refresh"
+        android:title="Synchronize data"
+        app:showAsAction="ifRoom"
+        />
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"

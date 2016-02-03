@@ -21,6 +21,8 @@ public class DataContract {
     public static final String PATH_PRICES = "prices";
     public static final String PATH_ITEMFILES = "itemfiles";
 
+    public static final String PATH_ITEMS_WITH_PRICES = "items_with_prices";
+
     public static final class FiletimesEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -65,6 +67,7 @@ public class DataContract {
         public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
     }
 
     public static final class UnitsEntry implements BaseColumns {
