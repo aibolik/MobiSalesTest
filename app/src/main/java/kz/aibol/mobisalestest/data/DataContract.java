@@ -34,7 +34,7 @@ public class DataContract {
         public static final String TABLE_NAME = "filetimes";
 
         public static final String COLUMN_FILENAME = "filename";
-        public static final String COLUMN_FILENAMEXML = "filnamexml";
+        public static final String COLUMN_FILENAMEXML = "filenamexml";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 
@@ -83,7 +83,7 @@ public class DataContract {
         public static final String COLUMN_CODE = "code";
         public static final String COLUMN_NAME1 = "name1";
         public static final String COLUMN_NAME2 = "name2";
-        public static final String COLUMN_LINE_NR = "line_nr";
+        public static final String COLUMN_LINE_NR = "linenr";
         public static final String COLUMN_CONV_FACT1 = "convfact1";
         public static final String COLUMN_CONV_FACT2 = "convfact2";
         public static final String COLUMN_CDATE = "cdate";
@@ -160,7 +160,7 @@ public class DataContract {
         public static final String COLUMN_FILETYPE = "filetype";
         public static final String COLUMN_FILENAME = "filename";
         public static final String COLUMN_LINENO = "lineno";
-        public static final String COLUMN_DEFAULT = "default";
+        public static final String COLUMN_DEFAULT = "default1";
         public static final String COLUMN_CDATE = "cdate";
         public static final String COLUMN_CTIME = "ctime";
 

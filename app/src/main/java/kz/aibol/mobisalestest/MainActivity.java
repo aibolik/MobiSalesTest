@@ -10,9 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import kz.aibol.mobisalestest.data.DataContract;
+import kz.aibol.mobisalestest.session.SessionManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +25,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        new DownloadFileTask(true, this).execute("ITEMS.XML");
+        session = new SessionManager(this);
+
+        if(!session.isLoggedIn()) {
+            session.setLogin(true);
+            new DownloadFileTask(this, false, true, "FILETIMES", 0).execute();
+        }
 
     }
 
@@ -40,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            this.deleteDatabase("mobisales.db");
+            session.setLogin(false);
+            finish();
             return true;
         }
 

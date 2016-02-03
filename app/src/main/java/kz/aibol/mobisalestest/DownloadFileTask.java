@@ -1,10 +1,12 @@
 package kz.aibol.mobisalestest;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -30,21 +32,43 @@ import kz.aibol.mobisalestest.data.DataContract;
  * Created by aibol on 1/31/16.
  */
 
-public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
+public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
 
-    boolean download;
     Context mContext;
+    boolean download;
+    boolean mainfile;
+    String filename;
+    int progress;
+    static ProgressDialog dialog;
 
-    public DownloadFileTask(boolean download, Context context) {
-        this.download = download;
+    public DownloadFileTask(Context context, boolean download, boolean mainfile, String filename, int progress) {
         mContext = context;
+        this.download = download;
+        this.mainfile = mainfile;
+        this.filename = filename;
+        this.progress = progress;
+
+        if(mainfile && !download) {
+            dialog = new ProgressDialog(mContext);
+            dialog.setMessage("Downloading database");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+        }
     }
 
     private final String LOG_TAG = DownloadFileTask.class.getSimpleName();
 
     @Override
-    protected Boolean doInBackground(String... params) {
-        String filename = params[0];
+    protected void onPreExecute() {
+        super.onPreExecute();
+        if(dialog != null) {
+            dialog.show();
+        }
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... params) {
+        Log.d(LOG_TAG, "AsyncTask started: " + download + ", " + mainfile + ", " + filename);
         if (filename == null) {
             Log.e(LOG_TAG, "No filename provided");
             return false;
@@ -57,6 +81,37 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
         } catch (XmlPullParserException e) {
             Log.e(LOG_TAG, e.getMessage());
             return false;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean result) {
+        if(mainfile && !download && !result) {
+            Toast.makeText(mContext, "Filetimes file not ready", Toast.LENGTH_LONG).show();
+            if(dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            return;
+        }
+        if(mainfile && result && !download) {
+            new DownloadFileTask(mContext, true, true, "FILETIMES", 0).execute();
+            return;
+        }
+        if(mainfile && download && result) {
+            new DownloadFileTask(mContext, false, false, "ITEMS", 1).execute();
+            new DownloadFileTask(mContext, false, false, "UNITS", 2).execute();
+            new DownloadFileTask(mContext, false, false, "BARCODES", 3).execute();
+            new DownloadFileTask(mContext, false, false, "PRICES", 4).execute();
+            new DownloadFileTask(mContext, false, false, "ITEMFILES", 5).execute();
+        }
+        if(!mainfile && !download && result) {
+            new DownloadFileTask(mContext, true, false, filename, progress).execute();
+        }
+        if(progress == 5 && download) {
+            Toast.makeText(mContext, "Database ready to use", Toast.LENGTH_LONG).show();
+            if(dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
         }
     }
 
@@ -81,7 +136,12 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
 
             BufferedReader reader = null;
 
-            inputStream = ftp.retrieveFileStream(filename);
+            if(!download) {
+                inputStream = ftp.retrieveFileStream(filename + ".RDY");
+            }
+            else {
+                inputStream = ftp.retrieveFileStream(filename + ".XML");
+            }
 
             if (inputStream == null) {
                 Log.d(LOG_TAG, "File does not exist");
@@ -170,85 +230,35 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
     }
 
     private void writeToDatabase(ArrayList<Map<String, String>> listOfInstances, String filename) {
-        filename = filename.substring(6, filename.length() - 4);
-        ArrayList<String> keys = new ArrayList<>();
+        filename = filename.substring(6);
         Uri insertUri;
         switch (filename) {
             case "FILETIMES": {
                 insertUri = DataContract.FiletimesEntry.CONTENT_URI;
-                keys.add(DataContract.FiletimesEntry._ID);
-                keys.add(DataContract.FiletimesEntry.COLUMN_FILENAME);
-                keys.add(DataContract.FiletimesEntry.COLUMN_FILENAMEXML);
-                keys.add(DataContract.FiletimesEntry.COLUMN_CDATE);
-                keys.add(DataContract.FiletimesEntry.COLUMN_CTIME);
                 break;
             }
             case "ITEMS": {
                 insertUri = DataContract.ItemsEntry.CONTENT_URI;
-                keys.add(DataContract.ItemsEntry._ID);
-                keys.add(DataContract.ItemsEntry.COLUMN_CODE);
-                keys.add(DataContract.ItemsEntry.COLUMN_NAME1);
-                keys.add(DataContract.ItemsEntry.COLUMN_NAME2);
-                keys.add(DataContract.ItemsEntry.COLUMN_SPECODE);
-                keys.add(DataContract.ItemsEntry.COLUMN_STGRPCODE);
-                keys.add(DataContract.ItemsEntry.COLUMN_CDATE);
-                keys.add(DataContract.ItemsEntry.COLUMN_CTIME);
                 break;
             }
             case "UNITS": {
                 insertUri = DataContract.UnitsEntry.CONTENT_URI;
-                keys.add(DataContract.UnitsEntry._ID);
-                keys.add(DataContract.UnitsEntry.COLUMN_ID_ITEMS);
-                keys.add(DataContract.UnitsEntry.COLUMN_CODE);
-                keys.add(DataContract.UnitsEntry.COLUMN_NAME1);
-                keys.add(DataContract.UnitsEntry.COLUMN_NAME2);
-                keys.add(DataContract.UnitsEntry.COLUMN_LINE_NR);
-                keys.add(DataContract.UnitsEntry.COLUMN_CONV_FACT1);
-                keys.add(DataContract.UnitsEntry.COLUMN_CONV_FACT2);
-                keys.add(DataContract.UnitsEntry.COLUMN_CDATE);
-                keys.add(DataContract.UnitsEntry.COLUMN_CTIME);
                 break;
             }
             case "BARCODES": {
                 insertUri = DataContract.BarcodesEntry.CONTENT_URI;
-                keys.add(DataContract.BarcodesEntry._ID);
-                keys.add(DataContract.BarcodesEntry.COLUMN_ID_UNIT);
-                keys.add(DataContract.BarcodesEntry.COLUMN_ID_ITEMS);
-                keys.add(DataContract.BarcodesEntry.COLUMN_BARCODE);
-                keys.add(DataContract.BarcodesEntry.COLUMN_LINE_NR);
-                keys.add(DataContract.BarcodesEntry.COLUMN_CDATE);
-                keys.add(DataContract.BarcodesEntry.COLUMN_CTIME);
                 break;
             }
             case "PRICES": {
                 insertUri = DataContract.PricesEntry.CONTENT_URI;
-                keys.add(DataContract.PricesEntry._ID);
-                keys.add(DataContract.PricesEntry.COLUMN_ID_UNIT);
-                keys.add(DataContract.PricesEntry.COLUMN_ID_ITEMS);
-                keys.add(DataContract.PricesEntry.COLUMN_CODE);
-                keys.add(DataContract.PricesEntry.COLUMN_PRICE);
-                keys.add(DataContract.PricesEntry.COLUMN_CLSPECODE);
-                keys.add(DataContract.PricesEntry.COLUMN_BEGDATE);
-                keys.add(DataContract.PricesEntry.COLUMN_ENDDATE);
-                keys.add(DataContract.PricesEntry.COLUMN_UNIT_CONVERT);
-                keys.add(DataContract.PricesEntry.COLUMN_CDATE);
-                keys.add(DataContract.PricesEntry.COLUMN_CTIME);
                 break;
             }
             case "ITEMFILES": {
                 insertUri = DataContract.ItemfilesEntry.CONTENT_URI;
-                keys.add(DataContract.ItemfilesEntry._ID);
-                keys.add(DataContract.ItemfilesEntry.COLUMN_ID_ITEMS);
-                keys.add(DataContract.ItemfilesEntry.COLUMN_FILETYPE);
-                keys.add(DataContract.ItemfilesEntry.COLUMN_FILENAME);
-                keys.add(DataContract.ItemfilesEntry.COLUMN_LINENO);
-                keys.add(DataContract.ItemfilesEntry.COLUMN_DEFAULT);
-                keys.add(DataContract.ItemfilesEntry.COLUMN_CDATE);
-                keys.add(DataContract.ItemfilesEntry.COLUMN_CTIME);
                 break;
             }
             default: {
-                throw new UnsupportedOperationException("Invalid filename");
+                throw new UnsupportedOperationException("Invalid filename:" + filename);
             }
         }
         for (Map<String, String> row : listOfInstances) {
@@ -256,7 +266,11 @@ public class DownloadFileTask extends AsyncTask<String, Void, Boolean> {
             for (Map.Entry<String, String> entry : row.entrySet()) {
                 if (entry.getKey().equals("ID")) {
                     values.put(DataContract.FiletimesEntry._ID, entry.getValue());
-                } else {
+                }
+                else if(entry.getKey().equals("DEFAULT")) {
+                    values.put("default1", entry.getValue());
+                }
+                else {
                     values.put(entry.getKey().toLowerCase(), entry.getValue());
                 }
             }

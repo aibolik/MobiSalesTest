@@ -69,6 +69,7 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 PricesEntry.COLUMN_ID_UNIT + " INTEGER NOT NULL, " +
                 PricesEntry.COLUMN_ID_ITEMS + " INTEGER NOT NULL, " +
                 PricesEntry.COLUMN_CODE + " TEXT NOT NULL, " +
+                PricesEntry.COLUMN_PRICE + " REAL NOT NULL, " +
                 PricesEntry.COLUMN_CLSPECODE + " TEXT NOT NULL, " +
                 PricesEntry.COLUMN_BEGDATE + " DATE NOT NULL, " +
                 PricesEntry.COLUMN_ENDDATE + " DATE NOT NULL, " +
