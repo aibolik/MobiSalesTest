@@ -158,15 +158,12 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput(inputStream, null);
 
-//            Vector<ContentValues> cVVector = new Vector<ContentValues>();
-//            ContentValues values = new ContentValues();
-
             ArrayList<Map<String, String>> listOfInstances = new ArrayList<Map<String, String>>();
             Map<String, String> instance = new HashMap<String, String>();
+
             String tag = "";
             String text = "";
             Boolean tag_open = false;
-
 
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -180,15 +177,11 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
                     //Log.d(LOG_TAG, "End tag " + xpp.getName());
                     if (tag_open) {
                         instance.put(tag, text);
-                    } else {
-                        if (instance.size() > 0)
-                            listOfInstances.add(instance);
-                        instance = new HashMap<String, String>();
                     }
+                } else if (eventType == XmlPullParser.END_TAG) {
                     tag_open = false;
                 } else if (eventType == XmlPullParser.TEXT) {
                     text = xpp.getText();
-                    //Log.d(LOG_TAG, "Text " + text);
                 }
                 eventType = xpp.next();
             }
@@ -199,8 +192,11 @@ public class DownloadFileTask extends AsyncTask<Void, Void, Boolean> {
             Log.d(LOG_TAG, "Number of instances: " + listOfInstances.size());
             for (Map<String, String> row : listOfInstances) {
                 Log.d(LOG_TAG, "" + "Size of new instance is: " + row.size());
-                for (Map.Entry<String, String> entry : row.entrySet()) {
-                    Log.d(LOG_TAG, "Key: " + entry.getKey() + " Value: " + entry.getValue());
+                for (String key : row.keySet()) {
+                    Object value = row.get(key);
+                    Log.d(LOG_TAG, "Key: " + key + " Value: " + value);
+
+
                 }
             }
             */
